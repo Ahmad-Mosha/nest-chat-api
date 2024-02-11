@@ -5,20 +5,20 @@ import { UsersModule } from './users/users.module';
 import { User } from './users/entities/user.entity';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot(),
-    TypeOrmModule.forRoot({
-      name: 'MongoDB',
-      type: 'mongodb',
-      url: process.env.MONGO_URI,
-      synchronize: true,
-      database: 'chat-app',
-      entities: [User],
-    }),
+	imports: [
+		ConfigModule.forRoot(),
+		TypeOrmModule.forRoot({
+			name: 'MongoDB',
+			type: 'mongodb',
+			url: process.env.MONGO_URI,
+			synchronize: true,
+			database: 'chat-app',
+			entities: [User],
+		}),
 
-    UsersModule,
-  ],
-  controllers: [],
-  providers: [],
+		UsersModule,
+	],
+	controllers: [],
+	providers: [],
 })
 export class AppModule {}
