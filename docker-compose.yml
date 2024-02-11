@@ -1,0 +1,17 @@
+version: '3.7'
+
+services:
+  mongodb:
+    image: mongo:latest
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: user
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_DATABASE: chat-app
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb-data:/data/db
+
+volumes:
+  mongodb-data:
