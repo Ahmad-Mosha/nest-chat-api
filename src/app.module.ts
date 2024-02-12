@@ -11,7 +11,7 @@ import { User } from './users/entities/user.entity';
 			name: 'MongoDB',
 			type: 'mongodb',
 			url: process.env.MONGO_URI,
-			synchronize: true,
+			synchronize: false,
 			database: 'chat-app',
 			entities: [User],
 		}),
