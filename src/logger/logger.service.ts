@@ -2,11 +2,12 @@ import { Injectable } from '@nestjs/common';
 import * as winston from 'winston';
 
 @Injectable()
-export class Logger {
+export class LoggerService {
 	private readonly formattingMessage = winston.format.printf((info) => {
 		return `[${info.timestamp} ${info.level}]: ${info.message}`;
 	});
-	Log = winston.createLogger({
+
+	logger = winston.createLogger({
 		transports: [
 			new winston.transports.Console({
 				format: winston.format.combine(
@@ -18,6 +19,16 @@ export class Logger {
 					this.formattingMessage,
 				),
 			}),
+			new winston.transports.File({ filename: 'application.log' }),
+			new winston.transports.File({ filename: 'error.log', level: 'error' }),
 		],
 	});
+
+	info(message: string, context?: string): void {
+		this.logger.info(message, { context });
+	}
+
+	error(message: string, context?: string): void {
+		this.logger.error(message, { context });
+	}
 }

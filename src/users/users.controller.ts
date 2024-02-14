@@ -1,11 +1,21 @@
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+	Body,
+	Controller,
+	Get,
+	Param,
+	Post,
+	UseGuards,
+	UseInterceptors,
+} from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { AuthenticatedGuard } from 'src/auth/guards/auth.guard';
+import { LoggerInterceptor } from 'src/interceptors/logger.interceptor';
 
 @Controller('users')
 @UseGuards(AuthenticatedGuard)
+@UseInterceptors(LoggerInterceptor)
 @ApiTags('users')
 export class UsersController {
 	constructor(private readonly usersService: UsersService) {}
