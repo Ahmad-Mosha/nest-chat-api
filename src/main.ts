@@ -2,21 +2,22 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import * as passport from 'passport';
-import * as session from 'express-session';
+import passport from 'passport';
+import session from 'express-session';
+import MongoStore from 'connect-mongo';
+import sessionConfig from './sessions/session.config';
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
-	app.useGlobalPipes(new ValidationPipe());
-
 	app.use(
 		session({
 			name: 'chat-app',
-			secret: process.env.SESSION_SECRET,
+			secret: process.env.SESSION_SECRET_NAME,
 			resave: false,
 			saveUninitialized: false,
 			cookie: {
-				maxAge: 60000, // 1 hour
+				maxAge: 60000,
 			},
+			store: MongoStore.create(sessionConfig),
 		}),
 	);
 
@@ -30,6 +31,7 @@ async function bootstrap() {
 		.addTag('chat')
 		.build();
 	const document = SwaggerModule.createDocument(app, config);
+	app.useGlobalPipes(new ValidationPipe());
 	SwaggerModule.setup('api', app, document);
 
 	await app.listen(3000);

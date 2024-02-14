@@ -10,7 +10,7 @@ import {
 	UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
-import { AuthenticatedGuard } from 'src/auth/guards/auth.guard';
+import { AuthenticatedGuard } from 'src/auth/auth.guard';
 import { LoggerInterceptor } from 'src/interceptors/logger.interceptor';
 
 @Controller('users')
@@ -23,20 +23,20 @@ export class UsersController {
 	@Post()
 	@ApiOperation({ summary: 'Create a user' })
 	@ApiParam({ name: 'CreateUserDto', required: true })
-	create(@Body() createUserDto: CreateUserDto) {
-		return this.usersService.create(createUserDto);
+	async create(@Body() createUserDto: CreateUserDto) {
+		return await this.usersService.create(createUserDto);
 	}
 
 	@Get()
 	@ApiOperation({ summary: 'Get all users' })
-	getAllUsers() {
-		return this.usersService.getAllUsers();
+	async getAllUsers() {
+		return await this.usersService.getAllUsers();
 	}
 
 	@Get(':email')
 	@ApiOperation({ summary: 'Get user by email' })
 	@ApiParam({ name: 'email', required: true })
-	getUserByEmail(@Param('email') email: string) {
-		return this.usersService.getUserByEmail(email);
+	async getUserByEmail(@Param('email') email: string) {
+		return await this.usersService.getUserByEmail(email);
 	}
 }
