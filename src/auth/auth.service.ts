@@ -6,13 +6,15 @@ import { comparePassword } from '../utils/bcrypt';
 export class AuthService {
 	constructor(private usersService: UsersService) {}
 
-	async validateUser(email: string, pass: string) {
+	async validateUser(email: string, password: string) {
 		const user = await this.usersService.getUserByEmail(email);
-		if (user && (await comparePassword(pass, user.password))) {
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			const { password, ...result } = user;
-			return result;
+		if (user && (await comparePassword(password, user.password))) {
+			return user;
 		}
 		return null;
+	}
+
+	async signup(createUserDto: any) {
+		return this.usersService.create(createUserDto);
 	}
 }

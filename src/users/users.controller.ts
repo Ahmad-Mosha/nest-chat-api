@@ -1,9 +1,11 @@
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { AuthenticatedGuard } from 'src/auth/guards/auth.guard';
 
 @Controller('users')
+@UseGuards(AuthenticatedGuard)
 @ApiTags('users')
 export class UsersController {
 	constructor(private readonly usersService: UsersService) {}
@@ -15,23 +17,16 @@ export class UsersController {
 		return this.usersService.create(createUserDto);
 	}
 
-	// @Get()
-	// findAll() {
-	//   return this.usersService.findAll();
-	// }
+	@Get()
+	@ApiOperation({ summary: 'Get all users' })
+	getAllUsers() {
+		return this.usersService.getAllUsers();
+	}
 
-	// @Get(':id')
-	// findOne(@Param('id') id: string) {
-	//   return this.usersService.findOne(+id);
-	// }
-
-	// @Patch(':id')
-	// update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-	//   return this.usersService.update(+id, updateUserDto);
-	// }
-
-	// @Delete(':id')
-	// remove(@Param('id') id: string) {
-	//   return this.usersService.remove(+id);
-	// }
+	@Get(':email')
+	@ApiOperation({ summary: 'Get user by email' })
+	@ApiParam({ name: 'email', required: true })
+	getUserByEmail(@Param('email') email: string) {
+		return this.usersService.getUserByEmail(email);
+	}
 }
