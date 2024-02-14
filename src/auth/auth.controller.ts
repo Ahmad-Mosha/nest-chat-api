@@ -1,8 +1,17 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+	Body,
+	Controller,
+	Get,
+	Post,
+	Req,
+	UseGuards,
+	UseInterceptors,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { SessionGuard } from 'src/sessions/session.guard';
-
+import { LoggerInterceptor } from 'src/interceptors/logger.interceptor';
+@UseInterceptors(LoggerInterceptor)
 @Controller('auth')
 export class AuthController {
 	constructor(private readonly authService: AuthService) {}
@@ -15,7 +24,6 @@ export class AuthController {
 		});
 		return user;
 	}
-
 	@UseGuards(SessionGuard)
 	@Post('login')
 	login(@Req() req) {

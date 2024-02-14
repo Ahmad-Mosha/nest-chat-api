@@ -6,6 +6,8 @@ import passport from 'passport';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import sessionConfig from './sessions/session.config';
+import { ExceptionLogger } from './exceptionFilters/logger.filter';
+
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
 	app.use(
@@ -32,6 +34,7 @@ async function bootstrap() {
 		.build();
 	const document = SwaggerModule.createDocument(app, config);
 	app.useGlobalPipes(new ValidationPipe());
+	app.useGlobalFilters(new ExceptionLogger());
 	SwaggerModule.setup('api', app, document);
 
 	await app.listen(3000);
