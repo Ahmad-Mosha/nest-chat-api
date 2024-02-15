@@ -11,12 +11,18 @@ import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { SessionGuard } from 'src/sessions/session.guard';
 import { LoggerInterceptor } from 'src/interceptors/logger.interceptor';
+import { ApiOperation, ApiTags, ApiParam, ApiResponse } from '@nestjs/swagger';
+import { LoginDto } from './dto/login.dto';
 @UseInterceptors(LoggerInterceptor)
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
 	constructor(private readonly authService: AuthService) {}
 
 	@Post('signup')
+	@ApiOperation({ summary: 'Create a new user' })
+	@ApiParam({ name: 'CreateUserDto', required: true })
+	@ApiResponse({ status: 201, description: 'User created successfully' })
 	async signup(@Body() createUserDto: CreateUserDto, @Req() req) {
 		const user = await this.authService.signup(createUserDto);
 		req.login(user, (err) => {
@@ -24,9 +30,11 @@ export class AuthController {
 		});
 		return user;
 	}
+
 	@UseGuards(SessionGuard)
+	@ApiParam({ name: 'LoginDto', type: LoginDto, required: true })
 	@Post('login')
-	login(@Req() req) {
+	login(payload: LoginDto, @Req() req) {
 		return req.user;
 	}
 
@@ -36,3 +44,4 @@ export class AuthController {
 		return 'Logged out';
 	}
 }
+

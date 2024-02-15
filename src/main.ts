@@ -17,7 +17,7 @@ async function bootstrap() {
 			resave: false,
 			saveUninitialized: false,
 			cookie: {
-				maxAge: 60000,
+				maxAge: parseInt(process.env.SESSION_MAX_AGE),
 			},
 			store: MongoStore.create(sessionConfig),
 		}),
@@ -25,6 +25,11 @@ async function bootstrap() {
 
 	app.use(passport.initialize());
 	app.use(passport.session());
+
+	const customOptions = {
+		customSiteTitle: 'My Custom Chat API Docs',
+		customCss: '.swagger-ui .topbar { background-color: #f0f0f0; }', // Example CSS customization
+	};
 
 	const config = new DocumentBuilder()
 		.setTitle('Chat Api')
@@ -35,8 +40,9 @@ async function bootstrap() {
 	const document = SwaggerModule.createDocument(app, config);
 	app.useGlobalPipes(new ValidationPipe());
 	app.useGlobalFilters(new ExceptionLogger());
-	SwaggerModule.setup('api', app, document);
+	SwaggerModule.setup('api', app, document, customOptions);
 
 	await app.listen(3000);
 }
 bootstrap();
+
