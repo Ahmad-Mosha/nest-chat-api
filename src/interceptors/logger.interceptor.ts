@@ -23,17 +23,8 @@ export class LoggerInterceptor implements NestInterceptor {
 		return next.handle().pipe(
 			tap(() => {
 				if (request.isAuthenticated()) {
-					this.logger.info(JSON.stringify(loggerObject));
+					this.logger.Log.info(JSON.stringify(loggerObject));
 				}
-			}),
-			tap({
-				error: (error) => {
-					const statusCode = error.status || 500;
-					const errorMessage = error.message || 'Internal Server Error';
-					this.logger.error(
-						`Request failed with status: ${statusCode} - ${errorMessage}\n${error.stack}`,
-					);
-				},
 			}),
 		);
 	}

@@ -7,7 +7,7 @@ export class LoggerService {
 		return `[${info.timestamp} ${info.level}]: ${info.message}`;
 	});
 
-	logger = winston.createLogger({
+	Log = winston.createLogger({
 		transports: [
 			new winston.transports.Console({
 				format: winston.format.combine(
@@ -19,16 +19,6 @@ export class LoggerService {
 					this.formattingMessage,
 				),
 			}),
-			new winston.transports.File({ filename: 'application.log' }),
-			new winston.transports.File({ filename: 'error.log', level: 'error' }),
 		],
 	});
-
-	info(message: string, context?: string): void {
-		this.logger.info(message, { context });
-	}
-
-	error(message: string, context?: string): void {
-		this.logger.error(message, { context });
-	}
 }

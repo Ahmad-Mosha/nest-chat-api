@@ -15,21 +15,21 @@ export class UsersService {
 	async create(createUserDto: CreateUserDto) {
 		const password = await hashPassword(createUserDto.password);
 		const user = this.repository.create({ ...createUserDto, password });
-		return this.repository.save(user);
+		return await this.repository.save(user);
 	}
 	async getUserByEmail(email: string) {
-		const user = this.repository.findOne({ where: { email } });
-		if (!user) {
-			throw new NotFoundException('User not found');
+		const user = await this.repository.findOne({ where: { email } });
+		if (user) {
+			return user;
 		}
-		return user;
+		throw new NotFoundException('User not found');
 	}
 
 	async getAllUsers() {
-		return this.repository.find();
+		return await this.repository.find();
 	}
 
 	async findOne(id: ObjectId): Promise<User | undefined> {
-		return this.repository.findOne({ where: { _id: id } });
+		return await this.repository.findOne({ where: { _id: id } });
 	}
 }
