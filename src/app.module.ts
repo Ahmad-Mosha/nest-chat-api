@@ -2,9 +2,10 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
-import { User } from './users/entities/user.entity';
+import { User } from './typeorm/entities/user.entity';
 import { AuthModule } from './auth/auth.module';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
+import { Account } from './typeorm/entities/account.entity';
 
 @Module({
 	imports: [
@@ -15,7 +16,7 @@ import { LoggerMiddleware } from './middlewares/logger.middleware';
 			url: process.env.MONGO_URI,
 			synchronize: false,
 			database: 'chat-app',
-			entities: [User],
+			entities: [User, Account],
 		}),
 
 		UsersModule,

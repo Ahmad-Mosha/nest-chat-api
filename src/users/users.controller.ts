@@ -10,7 +10,7 @@ import {
 	UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
-import { AuthenticatedGuard } from 'src/auth/auth.guard';
+import { AuthenticatedGuard } from 'src/guards/auth.guard';
 import { LoggerInterceptor } from 'src/interceptors/logger.interceptor';
 
 @Controller('users')

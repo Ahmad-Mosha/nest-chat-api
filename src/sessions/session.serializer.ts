@@ -1,5 +1,4 @@
 import { PassportSerializer } from '@nestjs/passport';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UsersService } from 'src/users/users.service';
 
 export class SessionSerializer extends PassportSerializer {
@@ -7,14 +6,11 @@ export class SessionSerializer extends PassportSerializer {
 		super();
 	}
 
-	serializeUser(user: CreateUserDto, done: (err, user: CreateUserDto) => void) {
+	serializeUser(user: Express.User, done: (err, user) => void) {
 		done(null, user);
 	}
 
-	async deserializeUser(
-		user: CreateUserDto,
-		done: (err, user: CreateUserDto) => void,
-	) {
+	async deserializeUser(user: Express.User, done: (err, user) => void) {
 		return done(null, user);
 	}
 }
