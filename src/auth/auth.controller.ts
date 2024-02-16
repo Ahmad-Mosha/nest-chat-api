@@ -49,8 +49,8 @@ export class AuthController {
 
   @UseGuards(GoogleAuthGuard)
   @Get('/google/login')
-  handleGoogleLogin() {
-    return { msg: 'Authenticated' };
+  handleGoogleLogin(@Req() req) {
+    console.log(req);
   }
 
   @UseGuards(GoogleAuthGuard)
