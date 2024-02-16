@@ -49,12 +49,14 @@ export class AuthController {
 
   @UseGuards(GoogleAuthGuard)
   @Get('/google/login')
+  @ApiOperation({ summary: 'Login with Google' })
   handleGoogleLogin(@Req() req) {
     console.log(req);
   }
 
   @UseGuards(GoogleAuthGuard)
   @Get('/users')
+  @ApiOperation({ summary: '' })
   handleGoogleRedirect() {
     return { msg: 'redirected' };
   }

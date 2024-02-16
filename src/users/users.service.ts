@@ -22,8 +22,10 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
     const password = await hashPassword(createUserDto.password);
-    const existingEmail = await this.getUserByEmail(createUserDto.email);
-    if (existingEmail) {
+    const existingUser = await this.userRepo.findOne({
+      where: { email: createUserDto.email },
+    });
+    if (existingUser) {
       throw new BadRequestException('Email already exists.');
     }
     const user = this.userRepo.create({ ...createUserDto, password });
