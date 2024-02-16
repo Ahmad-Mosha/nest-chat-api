@@ -9,10 +9,11 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { SessionGuard } from 'src/sessions/session.guard';
+import { SessionGuard } from 'src/guards/session.guard';
 import { LoggerInterceptor } from 'src/interceptors/logger.interceptor';
 import { ApiOperation, ApiTags, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { LoginDto } from './dto/login.dto';
+import { GoogleAuthGuard } from 'src/guards/googleAuth.guard';
 @UseInterceptors(LoggerInterceptor)
 @ApiTags('auth')
 @Controller('auth')
@@ -38,10 +39,21 @@ export class AuthController {
 		return req.user;
 	}
 
+	@UseGuards(GoogleAuthGuard)
+	@Get('/google/login')
+	handleGoogleLogin() {
+		return { msg: 'Authenticated' };
+	}
+
+	@UseGuards(GoogleAuthGuard)
+	@Get('/users')
+	handleGoogleRedirect() {
+		return { msg: 'redirected' };
+	}
+
 	@Get('logout')
 	logout(@Req() req) {
 		req.session.destroy();
 		return 'Logged out';
 	}
 }
-
