@@ -8,25 +8,25 @@ import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { Account } from './typeorm/entities/account.entity';
 
 @Module({
-	imports: [
-		ConfigModule.forRoot(),
-		TypeOrmModule.forRoot({
-			name: 'MongoDB',
-			type: 'mongodb',
-			url: process.env.MONGO_URI,
-			synchronize: false,
-			database: 'chat-app',
-			entities: [User, Account],
-		}),
+  imports: [
+    ConfigModule.forRoot(),
+    TypeOrmModule.forRoot({
+      name: 'MongoDB',
+      type: 'mongodb',
+      url: process.env.MONGO_URI,
+      synchronize: false,
+      database: 'chat-app',
+      entities: [User, Account],
+    }),
 
-		UsersModule,
-		AuthModule,
-	],
-	controllers: [],
-	providers: [],
+    UsersModule,
+    AuthModule,
+  ],
+  controllers: [],
+  providers: [],
 })
 export class AppModule implements NestModule {
-	configure(consumer: MiddlewareConsumer) {
-		consumer.apply(LoggerMiddleware).forRoutes('*');
-	}
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
 }

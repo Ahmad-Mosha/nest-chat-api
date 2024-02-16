@@ -47,23 +47,21 @@ export class AuthController {
     return req.user;
   }
 
+  @UseGuards(GoogleAuthGuard)
+  @Get('/google/login')
+  handleGoogleLogin() {
+    return { msg: 'Authenticated' };
+  }
 
-	@UseGuards(GoogleAuthGuard)
-	@Get('/google/login')
-	handleGoogleLogin() {
-		return { msg: 'Authenticated' };
-	}
+  @UseGuards(GoogleAuthGuard)
+  @Get('/users')
+  handleGoogleRedirect() {
+    return { msg: 'redirected' };
+  }
 
-	@UseGuards(GoogleAuthGuard)
-	@Get('/users')
-	handleGoogleRedirect() {
-		return { msg: 'redirected' };
-	}
-
-	@Get('logout')
-	logout(@Req() req) {
-		req.session.destroy();
-		return 'Logged out';
-	}
-
+  @Get('logout')
+  logout(@Req() req) {
+    req.session.destroy();
+    return 'Logged out';
+  }
 }

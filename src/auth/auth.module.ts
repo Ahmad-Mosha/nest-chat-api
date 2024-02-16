@@ -8,8 +8,8 @@ import { SessionSerializer } from 'src/sessions/session.serializer';
 import { GoogleStrategy } from 'src/strategies/google.strategy';
 
 @Module({
-	imports: [UsersModule, PassportModule.register({ session: true })],
-	providers: [AuthService, LocalStrategy, SessionSerializer, GoogleStrategy],
-	controllers: [AuthController],
+  imports: [UsersModule, PassportModule.register({ session: true })],
+  providers: [AuthService, LocalStrategy, SessionSerializer, GoogleStrategy],
+  controllers: [AuthController],
 })
 export class AuthModule {}

@@ -6,9 +6,9 @@ import { User } from '../typeorm/entities/user.entity';
 import { Account } from 'src/typeorm/entities/account.entity';
 
 @Module({
-	imports: [TypeOrmModule.forFeature([User, Account], 'MongoDB')],
-	controllers: [UsersController],
-	providers: [UsersService],
-	exports: [UsersService],
+  imports: [TypeOrmModule.forFeature([User, Account], 'MongoDB')],
+  controllers: [UsersController],
+  providers: [UsersService],
+  exports: [UsersService],
 })
 export class UsersModule {}

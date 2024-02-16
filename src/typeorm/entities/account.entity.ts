@@ -2,24 +2,24 @@ import { Column, Entity, ObjectIdColumn, ObjectId } from 'typeorm';
 
 @Entity('accounts')
 export class Account {
-	@ObjectIdColumn()
-	_id: ObjectId;
+  @ObjectIdColumn()
+  _id: ObjectId;
 
-	@Column()
-	displayName: string;
+  @Column()
+  displayName: string;
 
-	@Column()
-	email: string;
+  @Column()
+  email: string;
 
-	@Column()
-	image: string;
+  @Column()
+  image: string;
 
-	@Column()
-	provider: string;
+  @Column()
+  provider: string;
 
-	@Column()
-	id: string;
+  @Column()
+  id: string;
 
-	@Column()
-	accessToken: string;
+  @Column()
+  accessToken: string;
 }
