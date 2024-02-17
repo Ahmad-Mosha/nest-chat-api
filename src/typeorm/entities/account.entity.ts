@@ -9,10 +9,13 @@ export class Account {
   displayName: string;
 
   @Column()
-  email: string;
+  email?: string;
 
   @Column()
-  image: string;
+  image?: string;
+
+  @Column()
+  username?: string;
 
   @Column()
   provider: string;

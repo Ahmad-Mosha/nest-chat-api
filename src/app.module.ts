@@ -14,7 +14,7 @@ import { Account } from './typeorm/entities/account.entity';
       name: 'MongoDB',
       type: 'mongodb',
       url: process.env.MONGO_URI,
-      synchronize: false,
+      synchronize: true,
       database: 'chat-app',
       entities: [User, Account],
     }),
