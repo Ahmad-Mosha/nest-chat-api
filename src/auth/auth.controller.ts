@@ -14,6 +14,7 @@ import { LoggerInterceptor } from 'src/interceptors/logger.interceptor';
 import { ApiOperation, ApiTags, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { LoginDto } from './dto/login.dto';
 import { GoogleAuthGuard } from 'src/guards/googleAuth.guard';
+import { TwitterAuthGuard } from 'src/guards/twitter-auth.guard';
 @UseInterceptors(LoggerInterceptor)
 @ApiTags('auth')
 @Controller('auth')
@@ -65,5 +66,19 @@ export class AuthController {
   logout(@Req() req) {
     req.session.destroy();
     return 'Logged out';
+  }
+
+  @UseGuards(TwitterAuthGuard)
+  @Get('/twitter/login')
+  @ApiOperation({ summary: 'Login with Twitter' })
+  handleTwitterLogin(@Req() req) {
+    console.log(req);
+  }
+
+  @UseGuards(TwitterAuthGuard)
+  @Get('/twitter/callback')
+  @ApiOperation({ summary: '' })
+  handleTwitterRedirect() {
+    return { msg: 'redirected' };
   }
 }
