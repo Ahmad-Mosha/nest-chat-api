@@ -13,9 +13,12 @@ import { SessionGuard } from 'src/guards/session.guard';
 import { LoggerInterceptor } from 'src/interceptors/logger.interceptor';
 import { ApiOperation, ApiTags, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { LoginDto } from './dto/login.dto';
-import { GoogleAuthGuard } from 'src/guards/googleAuth.guard';
+import { GoogleAuthGuard } from 'src/guards/google-auth.guard';
 import { TwitterAuthGuard } from 'src/guards/twitter-auth.guard';
-import { GoogleLoginResponse, TwitterLoginResponse } from 'src/auth-swagger';
+import {
+  GoogleLoginResponse,
+  TwitterLoginResponse,
+} from 'src/swagger/auth-swagger';
 @UseInterceptors(LoggerInterceptor)
 @ApiTags('auth')
 @Controller('auth')

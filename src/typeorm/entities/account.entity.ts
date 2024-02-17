@@ -15,9 +15,6 @@ export class Account {
   image?: string;
 
   @Column()
-  username?: string;
-
-  @Column()
   provider: string;
 
   @Column()
