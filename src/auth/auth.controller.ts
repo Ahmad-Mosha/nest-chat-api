@@ -15,6 +15,7 @@ import { ApiOperation, ApiTags, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { LoginDto } from './dto/login.dto';
 import { GoogleAuthGuard } from 'src/guards/googleAuth.guard';
 import { TwitterAuthGuard } from 'src/guards/twitter-auth.guard';
+import { GoogleLoginResponse, TwitterLoginResponse } from 'src/auth-swagger';
 @UseInterceptors(LoggerInterceptor)
 @ApiTags('auth')
 @Controller('auth')
@@ -51,13 +52,17 @@ export class AuthController {
   @UseGuards(GoogleAuthGuard)
   @Get('/google/login')
   @ApiOperation({ summary: 'Login with Google' })
+  @ApiResponse({
+    status: 200,
+    description: 'Redirected to Twitter',
+    type: GoogleLoginResponse,
+  })
   handleGoogleLogin(@Req() req) {
     console.log(req);
   }
 
   @UseGuards(GoogleAuthGuard)
   @Get('/users')
-  @ApiOperation({ summary: '' })
   handleGoogleRedirect() {
     return { msg: 'redirected' };
   }
@@ -71,13 +76,18 @@ export class AuthController {
   @UseGuards(TwitterAuthGuard)
   @Get('/twitter/login')
   @ApiOperation({ summary: 'Login with Twitter' })
+  @ApiResponse({
+    status: 200,
+    description: 'Redirected to Twitter',
+    type: TwitterLoginResponse,
+  })
   handleTwitterLogin(@Req() req) {
     console.log(req);
   }
 
   @UseGuards(TwitterAuthGuard)
+  @ApiResponse({ status: 200, description: 'Redirected to the app' })
   @Get('/twitter/callback')
-  @ApiOperation({ summary: '' })
   handleTwitterRedirect() {
     return { msg: 'redirected' };
   }

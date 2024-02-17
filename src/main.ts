@@ -38,9 +38,9 @@ async function bootstrap() {
     .addTag('chat')
     .build();
   const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document, customOptions);
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new ExceptionLogger());
-  SwaggerModule.setup('api', app, document, customOptions);
 
   await app.listen(3000);
 }
