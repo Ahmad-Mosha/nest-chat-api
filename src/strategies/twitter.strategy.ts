@@ -14,7 +14,7 @@ export class TwitterStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(token: string, tokenSecret: string, profile: any) {
+  async validate(token: string, tokenSecret: string, profile) {
     const { displayName, id, provider } = profile;
     const email = profile.emails[0].value;
     const image =
@@ -27,7 +27,6 @@ export class TwitterStrategy extends PassportStrategy(Strategy) {
       image,
       accessToken: token,
     };
-    console.log(profile);
     await this.authService.OAuthValidate(account);
     return account;
   }

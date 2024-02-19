@@ -25,7 +25,7 @@ import {
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('signup')
+  @Post('register')
   @ApiOperation({ summary: 'Create a new user' })
   @ApiBody({
     type: CreateUserDto,
@@ -49,7 +49,8 @@ export class AuthController {
   })
   @Post('login')
   login(@Body() payload: LoginDto, @Req() req) {
-    return req.user;
+    const { email, name } = req.user;
+    return { email, name };
   }
 
   @UseGuards(GoogleAuthGuard)
@@ -66,8 +67,9 @@ export class AuthController {
 
   @UseGuards(GoogleAuthGuard)
   @Get('/users')
-  handleGoogleRedirect() {
-    return { msg: 'redirected' };
+  handleGoogleRedirect(@Req() req) {
+    const { displayName, image, email } = req.user;
+    return { displayName, image, email };
   }
 
   @Get('logout')
