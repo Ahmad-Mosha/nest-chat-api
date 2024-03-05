@@ -9,5 +9,6 @@ import { UsersModule } from 'src/users/users.module';
   imports: [TypeOrmModule.forFeature([Conversation], 'MongoDB'), UsersModule],
   providers: [ConversationsService],
   controllers: [ConversationsController],
+  exports: [ConversationsService],
 })
 export class ConversationsModule {}

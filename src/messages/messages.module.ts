@@ -3,10 +3,13 @@ import { MessagesService } from './messages.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Message } from 'src/typeorm/entities/message.entity';
 import { MessagesController } from './messages.controller';
-import { Conversation } from 'src/typeorm/entities/conversation.entity';
+import { ConversationsModule } from 'src/conversations/conversations.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Message, Conversation], 'MongoDB')],
+  imports: [
+    TypeOrmModule.forFeature([Message], 'MongoDB'),
+    ConversationsModule,
+  ],
   providers: [MessagesService],
   controllers: [MessagesController],
 })

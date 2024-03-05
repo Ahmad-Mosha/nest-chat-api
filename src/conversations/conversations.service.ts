@@ -2,8 +2,9 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ObjectId } from 'mongodb';
 import { Conversation } from 'src/typeorm/entities/conversation.entity';
+import { Message } from 'src/typeorm/entities/message.entity';
 import { UsersService } from 'src/users/users.service';
-import { ConversationData } from 'src/utils/types';
+import { ConversationRequestData } from 'src/utils/types';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -17,7 +18,7 @@ export class ConversationsService {
   async getAllConversations() {
     return await this.conversationRepo.find();
   }
-  async createConversation(data: ConversationData) {
+  async createConversation(data: ConversationRequestData) {
     const recipient = await this.userService.getUserByEmail(data.recipient);
     const conversation = this.conversationRepo.create({
       participants: [data.author, recipient],
@@ -26,9 +27,9 @@ export class ConversationsService {
   }
 
   async getConversation(id: ObjectId) {
-    const conversation = await this.conversationRepo.find({
+    const conversation = await this.conversationRepo.findOne({
       where: {
-        _id: id,
+        _id: new ObjectId(id),
       },
     });
 
@@ -36,5 +37,15 @@ export class ConversationsService {
       throw new NotFoundException('This conversation does not exist.');
     }
     return conversation;
+  }
+
+  async updatingConversationMessages(
+    conversation: Conversation,
+    message: Message,
+  ) {
+    await this.conversationRepo.update(conversation._id, {
+      messages: [message],
+    });
+    return;
   }
 }

@@ -17,13 +17,13 @@ export type UserCredentials = {
   email: string;
 };
 
-export type MessageData = {
+export type MessageRequestData = {
   content: string;
   conversationId: ObjectId;
   author: User | Account;
 };
 
-export type ConversationData = {
+export type ConversationRequestData = {
   recipient: string;
   author: User | Account;
 };
