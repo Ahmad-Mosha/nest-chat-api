@@ -10,6 +10,7 @@ import { Message } from './typeorm/entities/message.entity';
 import { Conversation } from './typeorm/entities/conversation.entity';
 import { MessagesModule } from './messages/messages.module';
 import { ConversationsModule } from './conversations/conversations.module';
+import { AccountsModule } from './accounts/accounts.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { ConversationsModule } from './conversations/conversations.module';
     AuthModule,
     MessagesModule,
     ConversationsModule,
+    AccountsModule,
   ],
   controllers: [],
   providers: [],

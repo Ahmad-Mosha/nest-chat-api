@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
   Req,
   UseGuards,
@@ -22,5 +23,9 @@ export class MessagesController {
   async createMessage(@Req() req, @Body() messageBody: CreateMessageDto) {
     const author: Account | User = req.user;
     return this.messageService.createMessage({ ...messageBody, author });
+  }
+  @Get()
+  async getAllMessages() {
+    return await this.messageService.getMessages();
   }
 }

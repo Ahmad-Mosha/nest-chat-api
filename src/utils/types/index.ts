@@ -22,3 +22,8 @@ export type MessageData = {
   conversationId: ObjectId;
   author: User | Account;
 };
+
+export type ConversationData = {
+  recipient: string;
+  author: User | Account;
+};

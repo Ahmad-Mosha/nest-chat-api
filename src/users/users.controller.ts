@@ -12,6 +12,7 @@ import {
 import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { AuthenticatedGuard } from 'src/guards/auth.guard';
 import { LoggerInterceptor } from 'src/interceptors/logger.interceptor';
+import { GetUserDTO } from './dto/get-user.dto';
 
 @Controller('users')
 @UseGuards(AuthenticatedGuard)
@@ -38,5 +39,10 @@ export class UsersController {
   @ApiParam({ name: 'email', required: true })
   async getUserByEmail(@Param('email') email: string) {
     return await this.usersService.getUserByEmail(email);
+  }
+
+  @Get('/id/me')
+  async getUserById(@Body() userId: GetUserDTO) {
+    return await this.usersService.findOneById(userId.id);
   }
 }

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Column, Entity, ObjectIdColumn, ObjectId, Index } from 'typeorm';
+import { Column, Entity, ObjectIdColumn, ObjectId } from 'typeorm';
 import { User } from './user.entity';
 import { Account } from './account.entity';
 import { Message } from './message.entity';
@@ -9,7 +9,7 @@ export class Conversation {
   @ObjectIdColumn()
   _id: ObjectId;
 
-  @Column('jsonb')
+  @Column({ array: true })
   participants: (User | Account)[];
 
   @Column((type) => Message)

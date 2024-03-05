@@ -7,9 +7,14 @@ import { LocalStrategy } from '../strategies/local.strategy';
 import { SessionSerializer } from 'src/sessions/session.serializer';
 import { GoogleStrategy } from 'src/strategies/google.strategy';
 import { TwitterStrategy } from 'src/strategies/twitter.strategy';
+import { AccountsModule } from 'src/accounts/accounts.module';
 
 @Module({
-  imports: [UsersModule, PassportModule.register({ session: true })],
+  imports: [
+    UsersModule,
+    PassportModule.register({ session: true }),
+    AccountsModule,
+  ],
   providers: [
     AuthService,
     LocalStrategy,

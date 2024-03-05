@@ -8,16 +8,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../typeorm/entities/user.entity';
 import { ObjectId, Repository } from 'typeorm';
 import { hashPassword } from '../utils/bcrypt';
-import { AccountCredentials } from 'src/utils/types';
-import { Account } from 'src/typeorm/entities/account.entity';
+import { AccountsService } from 'src/accounts/accounts.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User, 'MongoDB')
     private readonly userRepo: Repository<User>,
-    @InjectRepository(Account, 'MongoDB')
-    private readonly acccountRepo: Repository<Account>,
+    private readonly accountService: AccountsService,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -36,26 +34,20 @@ export class UsersService {
     if (user) {
       return user;
     }
-    throw new NotFoundException('User not found');
+
+    const accont = await this.accountService.getAccount(email);
+    return accont;
   }
 
   async getAllUsers() {
     return await this.userRepo.find();
   }
 
-  async findOne(id: ObjectId): Promise<User | undefined> {
-    return await this.userRepo.findOne({ where: { _id: id } });
-  }
-
-  async getOAuthAccount(id: string, accountData: AccountCredentials) {
-    const account = await this.acccountRepo.findOne({
-      where: { id: id },
-    });
-
-    if (account) {
-      return account;
+  async findOneById(id: ObjectId) {
+    const user = await this.userRepo.findOne({ where: { _id: id } });
+    if (!user) {
+      throw new NotFoundException('No user was found by that id.');
     }
-    const newAccount = this.acccountRepo.create(accountData);
-    return await this.acccountRepo.save(newAccount);
+    return user;
   }
 }

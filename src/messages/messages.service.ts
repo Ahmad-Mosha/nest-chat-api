@@ -10,11 +10,11 @@ export class MessagesService {
   constructor(
     @InjectRepository(Message, 'MongoDB')
     private readonly messagesRepo: Repository<Message>,
-    @InjectRepository(Message, 'MongoDB')
+    @InjectRepository(Conversation, 'MongoDB')
     private readonly conversationRepo: Repository<Conversation>,
   ) {}
 
-  async getAllMessages() {
+  async getMessages() {
     return await this.messagesRepo.find();
   }
 
@@ -22,12 +22,12 @@ export class MessagesService {
     const conversation = await this.conversationRepo.findOne({
       where: { _id: msg.conversationId },
     });
-
+    console.log(conversation);
     if (!conversation) {
       throw new NotFoundException('This conversation does not exist.');
     }
     const newMessage = this.messagesRepo.create(msg);
     await this.messagesRepo.save(newMessage);
-    return 'Created a new Message succ';
+    conversation.messages.push(newMessage);
   }
 }
