@@ -93,7 +93,8 @@ export class AuthController {
   @UseGuards(TwitterAuthGuard)
   @ApiResponse({ status: 200, description: 'Redirected to the app' })
   @Get('/twitter/callback')
-  handleTwitterRedirect() {
-    return { msg: 'redirected' };
+  handleTwitterRedirect(@Req() req) {
+    const { displayName, image, email } = req.user;
+    return { displayName, image, email };
   }
 }

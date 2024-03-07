@@ -6,6 +6,11 @@ import { User } from './typeorm/entities/user.entity';
 import { AuthModule } from './auth/auth.module';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { Account } from './typeorm/entities/account.entity';
+import { Message } from './typeorm/entities/message.entity';
+import { Conversation } from './typeorm/entities/conversation.entity';
+import { MessagesModule } from './messages/messages.module';
+import { ConversationsModule } from './conversations/conversations.module';
+import { AccountsModule } from './accounts/accounts.module';
 
 @Module({
   imports: [
@@ -16,11 +21,14 @@ import { Account } from './typeorm/entities/account.entity';
       url: process.env.MONGO_URI,
       synchronize: true,
       database: 'chat-app',
-      entities: [User, Account],
+      entities: [User, Account, Message, Conversation],
     }),
 
     UsersModule,
     AuthModule,
+    MessagesModule,
+    ConversationsModule,
+    AccountsModule,
   ],
   controllers: [],
   providers: [],
