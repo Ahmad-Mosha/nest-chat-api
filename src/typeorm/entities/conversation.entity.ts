@@ -12,6 +12,6 @@ export class Conversation {
   @Column({ array: true })
   participants: (User | Account)[];
 
-  @Column((type) => Message)
+  @Column((type) => Message, { array: true })
   messages: Message[];
 }

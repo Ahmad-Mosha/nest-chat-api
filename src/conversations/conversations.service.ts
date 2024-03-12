@@ -5,13 +5,13 @@ import { Conversation } from 'src/typeorm/entities/conversation.entity';
 import { Message } from 'src/typeorm/entities/message.entity';
 import { UsersService } from 'src/users/users.service';
 import { ConversationRequestData } from 'src/utils/types';
-import { Repository } from 'typeorm';
+import { MongoRepository } from 'typeorm';
 
 @Injectable()
 export class ConversationsService {
   constructor(
     @InjectRepository(Conversation, 'MongoDB')
-    private readonly conversationRepo: Repository<Conversation>,
+    private readonly conversationRepo: MongoRepository<Conversation>,
     private readonly userService: UsersService,
   ) {}
 
@@ -43,9 +43,16 @@ export class ConversationsService {
     conversation: Conversation,
     message: Message,
   ) {
-    await this.conversationRepo.update(conversation._id, {
-      messages: [message],
-    });
-    return;
+    if (!conversation.messages) {
+      return await this.conversationRepo.updateOne(
+        { _id: conversation._id },
+        { $set: { messages: [message] } },
+      );
+    }
+
+    return await this.conversationRepo.updateOne(
+      { _id: conversation._id },
+      { $push: { messages: message } as any },
+    );
   }
 }
