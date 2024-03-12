@@ -21,7 +21,6 @@ export class MessagesService {
     const conversation = await this.conversationService.getConversation(
       msg.conversationId,
     );
-    console.log(conversation);
     const newMessage = this.messagesRepo.create(msg);
     await this.messagesRepo.save(newMessage);
     await this.conversationService.updatingConversationMessages(
