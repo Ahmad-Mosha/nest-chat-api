@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Message } from 'src/typeorm/entities/message.entity';
 import { Repository } from 'typeorm';
@@ -21,6 +21,13 @@ export class MessagesService {
     const conversation = await this.conversationService.getConversation(
       msg.conversationId,
     );
+    if (
+      !conversation.participants
+        .map((user) => user._id)
+        .includes(msg.author._id)
+    ) {
+      throw new UnauthorizedException('You are not allowed to send messages');
+    }
     const newMessage = this.messagesRepo.create(msg);
     await this.messagesRepo.save(newMessage);
     await this.conversationService.updatingConversationMessages(

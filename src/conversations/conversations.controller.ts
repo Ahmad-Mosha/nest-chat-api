@@ -25,6 +25,7 @@ export class ConversationsController {
   async getConversations() {
     return await this.conversationService.getAllConversations();
   }
+
   @Post('/create')
   async createConv(
     @Req() req,
@@ -42,4 +43,5 @@ export class ConversationsController {
   async getConv(@Body() conversationId: GetConversationDTO) {
     return await this.conversationService.getConversation(conversationId.id);
   }
+  // why using Post here? It should be Get instead , and the body should be a param
 }
