@@ -25,5 +25,5 @@ export type MessageRequestData = {
 
 export type ConversationRequestData = {
   recipient: string;
-  author: User | Account;
+  user: User | Account;
 };

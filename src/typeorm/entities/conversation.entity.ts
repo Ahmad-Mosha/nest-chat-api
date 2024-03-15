@@ -9,8 +9,11 @@ export class Conversation {
   @ObjectIdColumn()
   _id: ObjectId;
 
-  @Column({ array: true })
-  participants: (User | Account)[];
+  @Column()
+  creator: User | Account;
+
+  @Column()
+  recipent: User | Account;
 
   @Column((type) => Message, { array: true })
   messages: Message[];

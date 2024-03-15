@@ -1,9 +1,17 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ObjectId } from 'mongodb';
+import { Account } from 'src/typeorm/entities/account.entity';
 import { Conversation } from 'src/typeorm/entities/conversation.entity';
 import { Message } from 'src/typeorm/entities/message.entity';
+import { User } from 'src/typeorm/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
+import { doesExist } from 'src/utils/conversations/doesExist';
 import { ConversationRequestData } from 'src/utils/types';
 import { MongoRepository } from 'typeorm';
 
@@ -18,28 +26,52 @@ export class ConversationsService {
   async getAllConversations() {
     return await this.conversationRepo.find();
   }
-  async createConversation(data: ConversationRequestData) {
-    const recipient = await this.userService.getUserByEmail(data.recipient);
+  async createConversation(request: ConversationRequestData) {
+    const recipent = await this.userService.getUserByEmail(request.recipient);
+    if (recipent.email === request.user.email)
+      throw new HttpException(
+        "You can't create a conversation with yourself",
+        HttpStatus.BAD_REQUEST,
+      );
+
+    const existedConversation = await doesExist(
+      request.user,
+      recipent,
+      this.conversationRepo,
+    );
+    if (existedConversation)
+      throw new HttpException(
+        'Conversation already exists',
+        HttpStatus.BAD_REQUEST,
+      );
     const conversation = this.conversationRepo.create({
-      participants: [data.author, recipient],
+      creator: request.user,
+      recipent: recipent,
     });
     return await this.conversationRepo.save(conversation);
   }
 
-  async getConversation(id: ObjectId) {
-    const conversation = await this.conversationRepo.findOne({
+  async getConversations(authUser: User | Account) {
+    const conversations = await this.conversationRepo.find({
       where: {
-        _id: new ObjectId(id),
+        $or: [{ creator: authUser }, { recipent: authUser }],
       },
     });
 
-    if (!conversation) {
-      throw new NotFoundException('This conversation does not exist.');
+    if (conversations.length === 0) {
+      throw new NotFoundException('This user does not have any conversations.');
     }
+    return conversations;
+  }
+
+  async getConversationById(conversationId: ObjectId) {
+    const conversation = await this.conversationRepo.findOne({
+      where: { _id: new ObjectId(conversationId) },
+    });
     return conversation;
   }
 
-  async updatingConversationMessages(
+  async updateConversationMessages(
     conversation: Conversation,
     message: Message,
   ) {

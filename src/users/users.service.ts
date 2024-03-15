@@ -6,7 +6,7 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../typeorm/entities/user.entity';
-import { ObjectId, Repository } from 'typeorm';
+import { MongoRepository, ObjectId } from 'typeorm';
 import { hashPassword } from '../utils/bcrypt';
 import { AccountsService } from 'src/accounts/accounts.service';
 
@@ -14,7 +14,7 @@ import { AccountsService } from 'src/accounts/accounts.service';
 export class UsersService {
   constructor(
     @InjectRepository(User, 'MongoDB')
-    private readonly userRepo: Repository<User>,
+    private readonly userRepo: MongoRepository<User>,
     private readonly accountService: AccountsService,
   ) {}
 
