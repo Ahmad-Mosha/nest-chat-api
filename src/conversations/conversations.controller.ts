@@ -2,8 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
-  Req,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -14,6 +14,7 @@ import { ConversationsService } from './conversations.service';
 import { AuthenticatedGuard } from 'src/guards/auth.guard';
 import { LoggerInterceptor } from 'src/interceptors/logger.interceptor';
 import { GetConversationDTO } from './dto/get-conversation.dto';
+import { AuthUser } from 'src/decorators/auth.decorator';
 
 @UseInterceptors(LoggerInterceptor)
 @UseGuards(AuthenticatedGuard)
@@ -28,20 +29,23 @@ export class ConversationsController {
 
   @Post('/create')
   async createConv(
-    @Req() req,
+    @AuthUser() user: User | Account,
     @Body() ConversationData: CreateConversationDto,
   ) {
-    const author: User | Account = req.user;
     const conversation = await this.conversationService.createConversation({
       ...ConversationData,
-      author,
+      user,
     });
     return conversation;
   }
 
-  @Post()
-  async getConv(@Body() conversationId: GetConversationDTO) {
-    return await this.conversationService.getConversation(conversationId.id);
+  @Get()
+  async getAuthUserConversations(@AuthUser() user: User | Account) {
+    return await this.conversationService.getConversations(user);
   }
-  // why using Post here? It should be Get instead , and the body should be a param
+
+  @Get(':id')
+  async getConversation(@Param('id') param: GetConversationDTO) {
+    return await this.conversationService.getConversationById(param.id);
+  }
 }
