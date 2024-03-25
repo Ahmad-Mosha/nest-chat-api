@@ -3,6 +3,7 @@ import { Column, Entity, ObjectIdColumn, ObjectId } from 'typeorm';
 import { User } from './user.entity';
 import { Account } from './account.entity';
 import { Message } from './message.entity';
+import { CreateDateColumn } from 'typeorm';
 
 @Entity('conversations')
 export class Conversation {
@@ -15,6 +16,9 @@ export class Conversation {
   @Column()
   recipent: User | Account;
 
-  @Column((type) => Message, { array: true })
+  @Column({ array: true })
   messages: Message[];
+
+  @CreateDateColumn({ type: 'timestamptz' })
+  created_at: Date;
 }

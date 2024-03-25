@@ -27,3 +27,13 @@ export type ConversationRequestData = {
   recipient: string;
   user: User | Account;
 };
+
+export enum RequestStatus {
+  accepted = 'accepted',
+  pending = 'pending',
+}
+
+export type InvitationData = {
+  sender: User | Account;
+  receiver: string;
+};
