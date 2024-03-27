@@ -9,7 +9,7 @@ export const AuthUser = createParamDecorator(
     const user: User | Account = request.user;
     const getId = user._id;
     const _id = new ObjectId(getId);
-
+    console.log(user);
     return { ...user, _id };
   },
 );

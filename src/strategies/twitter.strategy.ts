@@ -15,12 +15,13 @@ export class TwitterStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(token: string, tokenSecret: string, profile) {
-    const { displayName, id, provider } = profile;
+    const { id, provider } = profile;
     const email = profile.emails[0].value;
     const image =
       profile.photos && profile.photos[0] ? profile.photos[0].value : null;
+    const name = profile.displayName;
     const account = {
-      displayName,
+      name,
       provider,
       id,
       email,
