@@ -7,6 +7,8 @@ export async function doesExist(
   rec: any,
   conversationRepo: MongoRepository<Conversation>,
 ) {
+  console.log(authUser);
+  console.log(rec);
   const conversation = await conversationRepo.findOne({
     where: {
       $or: [
@@ -15,5 +17,6 @@ export async function doesExist(
       ],
     },
   });
+  console.log(conversation);
   return conversation;
 }

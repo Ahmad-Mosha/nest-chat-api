@@ -15,12 +15,17 @@ import { AuthenticatedGuard } from 'src/guards/auth.guard';
 import { LoggerInterceptor } from 'src/interceptors/logger.interceptor';
 import { GetConversationDTO } from './dto/get-conversation.dto';
 import { AuthUser } from 'src/decorators/auth.decorator';
+import { ConversationsInterceptor } from 'src/interceptors/conversations.interceptor';
+import { UsersService } from 'src/users/users.service';
 
 @UseInterceptors(LoggerInterceptor)
 @UseGuards(AuthenticatedGuard)
 @Controller('conversations')
 export class ConversationsController {
-  constructor(private readonly conversationService: ConversationsService) {}
+  constructor(
+    private readonly conversationService: ConversationsService,
+    private readonly userService: UsersService,
+  ) {}
 
   @Get('find')
   async getConversations() {
@@ -38,10 +43,13 @@ export class ConversationsController {
     });
     return conversation;
   }
-
   @Get()
+  @UseInterceptors(ConversationsInterceptor)
   async getAuthUserConversations(@AuthUser() user: User | Account) {
-    return await this.conversationService.getConversations(user);
+    const authUser = await this.userService.getUserByEmail(user.email);
+    console.log(authUser);
+    console.log(user);
+    return await this.conversationService.getConversations(authUser);
   }
 
   @Get(':id')

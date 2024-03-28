@@ -1,9 +1,8 @@
-import { Account } from 'src/typeorm/entities/account.entity';
-import { User } from 'src/typeorm/entities/user.entity';
 import { ObjectId } from 'typeorm';
+import { User, Account } from 'src/typeorm';
 
 export type AccountCredentials = {
-  displayName: string;
+  name: string;
   email: string;
   image: string;
   provider: string;
@@ -36,4 +35,11 @@ export enum RequestStatus {
 export type InvitationData = {
   sender: User | Account;
   receiver: string;
+};
+
+export type AuthenticatedUser = {
+  displayName: string;
+  name: string;
+  email: string;
+  image?: string;
 };

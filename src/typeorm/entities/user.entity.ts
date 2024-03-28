@@ -13,5 +13,8 @@ export class User {
   email: string;
 
   @Column()
+  image?: string;
+
+  @Column()
   password: string;
 }

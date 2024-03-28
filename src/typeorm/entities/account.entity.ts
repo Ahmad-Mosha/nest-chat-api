@@ -6,7 +6,7 @@ export class Account {
   _id: ObjectId;
 
   @Column()
-  displayName: string;
+  name: string;
 
   @Column()
   email?: string;
