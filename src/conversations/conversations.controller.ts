@@ -37,6 +37,7 @@ export class ConversationsController {
     @AuthUser() user: User | Account,
     @Body() ConversationData: CreateConversationDto,
   ) {
+    console.log(ConversationData);
     const conversation = await this.conversationService.createConversation({
       ...ConversationData,
       user,
@@ -47,8 +48,6 @@ export class ConversationsController {
   @UseInterceptors(ConversationsInterceptor)
   async getAuthUserConversations(@AuthUser() user: User | Account) {
     const authUser = await this.userService.getUserByEmail(user.email);
-    console.log(authUser);
-    console.log(user);
     return await this.conversationService.getConversations(authUser);
   }
 

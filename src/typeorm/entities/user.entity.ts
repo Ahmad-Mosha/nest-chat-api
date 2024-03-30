@@ -12,7 +12,7 @@ export class User {
   @Index({ unique: true })
   email: string;
 
-  @Column()
+  @Column({ default: '' })
   image?: string;
 
   @Column()
