@@ -65,10 +65,16 @@ export class ConversationsService {
     return conversations;
   }
 
-  async getConversationById(conversationId: ObjectId) {
+  async getConversationById(conversationId: string) {
     const conversation = await this.conversationRepo.findOne({
       where: { _id: new ObjectId(conversationId) },
     });
+
+    if (!conversation) {
+      throw new NotFoundException(
+        'There is no conversation found with that Id.',
+      );
+    }
     return conversation;
   }
 

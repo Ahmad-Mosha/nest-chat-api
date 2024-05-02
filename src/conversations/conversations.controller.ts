@@ -13,10 +13,10 @@ import { Account } from 'src/typeorm/entities/account.entity';
 import { ConversationsService } from './conversations.service';
 import { AuthenticatedGuard } from 'src/guards/auth.guard';
 import { LoggerInterceptor } from 'src/interceptors/logger.interceptor';
-import { GetConversationDTO } from './dto/get-conversation.dto';
 import { AuthUser } from 'src/decorators/auth.decorator';
 import { ConversationsInterceptor } from 'src/interceptors/conversations.interceptor';
 import { UsersService } from 'src/users/users.service';
+import { ValidateMongoIdPipe } from 'src/pipes/validate-mongoid.pipe';
 
 @UseInterceptors(LoggerInterceptor)
 @UseGuards(AuthenticatedGuard)
@@ -52,7 +52,7 @@ export class ConversationsController {
   }
 
   @Get(':id')
-  async getConversation(@Param('id') param: GetConversationDTO) {
-    return await this.conversationService.getConversationById(param.id);
+  async getConversation(@Param('id', ValidateMongoIdPipe) id: string) {
+    return await this.conversationService.getConversationById(id);
   }
 }

@@ -1,4 +1,3 @@
-import { ObjectId } from 'typeorm';
 import { User, Account } from 'src/typeorm';
 
 export type AccountCredentials = {
@@ -18,7 +17,7 @@ export type UserCredentials = {
 
 export type MessageRequestData = {
   content: string;
-  conversationId: ObjectId;
+  conversationId: string;
   author: User | Account;
 };
 

@@ -31,7 +31,16 @@ export class Gateway {
 
   @SubscribeMessage('message')
   handleMessage(@MessageBody() body: any, @ConnectedSocket() client) {
+    const {
+      session: {
+        passport: {
+          user: { _id },
+        },
+      },
+    } = client.request;
+    const author = this.socketMap.getUserSocket(_id);
     const map = this.socketMap.getSockets();
     console.log(map);
+    console.log(author);
   }
 }
