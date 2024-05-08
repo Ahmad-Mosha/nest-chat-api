@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { Socket } from 'socket.io';
-
 @Injectable()
 export class SocketsMap {
   private readonly sockets = new Map<string, Socket>();

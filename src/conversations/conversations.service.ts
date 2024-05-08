@@ -52,13 +52,11 @@ export class ConversationsService {
   }
 
   async getConversations(authUser: User | Account) {
-    console.log(authUser);
     const conversations = await this.conversationRepo.find({
       where: {
         $or: [{ creator: authUser }, { recipent: authUser }],
       },
     });
-    console.log(conversations);
     if (conversations.length === 0) {
       throw new NotFoundException('This user does not have any conversations.');
     }

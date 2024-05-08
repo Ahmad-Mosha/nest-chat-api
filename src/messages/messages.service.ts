@@ -37,5 +37,13 @@ export class MessagesService {
       conversation,
       newMessage,
     );
+    const messageData = {
+      conversation: {
+        creator: conversation.creator,
+        recipent: conversation.recipent,
+      },
+      message: newMessage,
+    };
+    return messageData;
   }
 }
