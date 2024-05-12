@@ -12,6 +12,7 @@ import { Message } from 'src/typeorm/entities/message.entity';
 import { User } from 'src/typeorm/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { doesExist } from 'src/utils/conversations/doesExist';
+import { filterObject } from 'src/utils/functions/deleteObjectKey';
 import { ConversationRequestData } from 'src/utils/types';
 import { MongoRepository } from 'typeorm';
 
@@ -73,7 +74,11 @@ export class ConversationsService {
         'There is no conversation found with that Id.',
       );
     }
-    return conversation;
+    const newConversation = filterObject<Conversation>(
+      conversation,
+      'password',
+    );
+    return newConversation;
   }
 
   async updateConversationMessages(

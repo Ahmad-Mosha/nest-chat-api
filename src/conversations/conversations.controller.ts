@@ -49,7 +49,6 @@ export class ConversationsController {
     const authUser = await this.userService.getUserByEmail(user.email);
     return await this.conversationService.getConversations(authUser);
   }
-
   @Get(':id')
   async getConversation(@Param('id', ValidateMongoIdPipe) id: string) {
     return await this.conversationService.getConversationById(id);
