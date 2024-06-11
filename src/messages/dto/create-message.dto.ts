@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsMongoId, IsNotEmpty, IsString } from 'class-validator';
-import { ObjectId } from 'typeorm';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateMessageDto {
   @IsNotEmpty()
@@ -13,11 +12,11 @@ export class CreateMessageDto {
   content: string;
 
   @IsNotEmpty()
-  @IsMongoId()
+  @IsString()
   @ApiProperty({
     description: 'The targeted conversation',
     type: String,
     required: true,
   })
-  conversationId: ObjectId;
+  conversationId: string;
 }

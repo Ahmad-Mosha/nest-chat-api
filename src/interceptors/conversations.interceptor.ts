@@ -23,19 +23,19 @@ export class ConversationsInterceptor implements NestInterceptor {
           if (conversation.creator.email === user.email) {
             return {
               _id,
-              recipent: {
-                name: conversation.recipent.name,
-                email: conversation.recipent.email,
-                image: conversation.recipent.image,
+              recipient: {
+                name: conversation.recipient.name,
+                email: conversation.recipient.email,
+                image: conversation.recipient.image,
               },
               messages,
               created_at,
             };
           }
-          if (conversation.recipent.email === user.email) {
+          if (conversation.recipient.email === user.email) {
             return {
               _id,
-              recipent: {
+              recipient: {
                 name: conversation.creator.name,
                 email: conversation.creator.email,
                 image: conversation.creator.image,

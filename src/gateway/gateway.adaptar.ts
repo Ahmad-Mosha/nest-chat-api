@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
-import { ForbiddenException, INestApplicationContext } from '@nestjs/common';
+import { INestApplicationContext } from '@nestjs/common';
 import { IoAdapter } from '@nestjs/platform-socket.io';
 import { RequestHandler } from 'express';
 import { ServerOptions, Socket } from 'socket.io';
@@ -18,11 +18,12 @@ export class AuthenticatedSocketIoAdapter extends IoAdapter {
       middleware(socket.request, {}, next);
     server.use(wrap(this.session));
     server.use((socket, next) => {
-      const authenticatedUser = socket.request.session.passport.user;
-      if (!authenticatedUser) {
-        throw new ForbiddenException('Your are not authenticated');
+      try {
+        socket.request.session.passport.user;
+        return next();
+      } catch (e) {
+        return next(e);
       }
-      next();
     });
     return server;
   }

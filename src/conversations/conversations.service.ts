@@ -12,6 +12,7 @@ import { Message } from 'src/typeorm/entities/message.entity';
 import { User } from 'src/typeorm/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { doesExist } from 'src/utils/conversations/doesExist';
+import { filterObject } from 'src/utils/functions/deleteObjectKey';
 import { ConversationRequestData } from 'src/utils/types';
 import { MongoRepository } from 'typeorm';
 
@@ -27,8 +28,8 @@ export class ConversationsService {
     return await this.conversationRepo.find();
   }
   async createConversation(request: ConversationRequestData) {
-    const recipent = await this.userService.getUserByEmail(request.recipient);
-    if (recipent.email === request.user.email)
+    const recipient = await this.userService.getUserByEmail(request.recipient);
+    if (recipient.email === request.user.email)
       throw new HttpException(
         "You can't create a conversation with yourself",
         HttpStatus.BAD_REQUEST,
@@ -36,7 +37,7 @@ export class ConversationsService {
 
     const existedConversation = await doesExist(
       request.user,
-      recipent,
+      recipient,
       this.conversationRepo,
     );
     if (existedConversation)
@@ -46,30 +47,38 @@ export class ConversationsService {
       );
     const conversation = this.conversationRepo.create({
       creator: request.user,
-      recipent: recipent,
+      recipient: recipient,
     });
     return await this.conversationRepo.save(conversation);
   }
 
   async getConversations(authUser: User | Account) {
-    console.log(authUser);
     const conversations = await this.conversationRepo.find({
       where: {
-        $or: [{ creator: authUser }, { recipent: authUser }],
+        $or: [{ creator: authUser }, { recipient: authUser }],
       },
     });
-    console.log(conversations);
     if (conversations.length === 0) {
       throw new NotFoundException('This user does not have any conversations.');
     }
     return conversations;
   }
 
-  async getConversationById(conversationId: ObjectId) {
+  async getConversationById(conversationId: string) {
     const conversation = await this.conversationRepo.findOne({
       where: { _id: new ObjectId(conversationId) },
     });
-    return conversation;
+
+    if (!conversation) {
+      throw new NotFoundException(
+        'There is no conversation found with that Id.',
+      );
+    }
+    const newConversation = filterObject<Conversation>(
+      conversation,
+      'password',
+    );
+    return newConversation;
   }
 
   async updateConversationMessages(

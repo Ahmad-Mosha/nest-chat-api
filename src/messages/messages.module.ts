@@ -12,5 +12,6 @@ import { ConversationsModule } from 'src/conversations/conversations.module';
   ],
   providers: [MessagesService],
   controllers: [MessagesController],
+  exports: [MessagesService],
 })
 export class MessagesModule {}
