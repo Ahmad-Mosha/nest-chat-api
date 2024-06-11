@@ -19,8 +19,7 @@ export class AuthenticatedSocketIoAdapter extends IoAdapter {
     server.use(wrap(this.session));
     server.use((socket, next) => {
       try {
-        const user = socket.request.session.passport.user;
-        console.log(user);
+        socket.request.session.passport.user;
         return next();
       } catch (e) {
         return next(e);

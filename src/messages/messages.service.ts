@@ -13,6 +13,8 @@ export class MessagesService {
     private readonly conversationService: ConversationsService,
   ) {}
 
+  // public events$ = new Subject<{ data: MessageData }>();
+
   async getMessages() {
     return await this.messagesRepo.find();
   }
@@ -44,6 +46,7 @@ export class MessagesService {
       },
       message: newMessage,
     };
+    // this.events$.next({ data: messageData });
     return messageData;
   }
 }

@@ -1,4 +1,4 @@
-import { User, Account, Conversation, Message } from 'src/typeorm';
+import { User, Account, Message } from 'src/typeorm';
 
 export type AccountCredentials = {
   name: string;
@@ -43,7 +43,11 @@ export type AuthenticatedUser = {
   image?: string;
 };
 
-export type GatewayMessageData = {
+export type MessageData = {
+  conversation: {
+    creator: User | Account;
+    recipent: User | Account;
+  };
+
   message: Message;
-  conversation: Conversation;
 };

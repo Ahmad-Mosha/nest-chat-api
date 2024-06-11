@@ -5,8 +5,8 @@ import {
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
 import { SocketsMap } from './sockets.map';
+import { MessageData } from 'src/utils/types';
 import { OnEvent } from '@nestjs/event-emitter';
-import { GatewayMessageData } from 'src/utils/types';
 @WebSocketGateway({
   cors: {
     origin: [`http://localhost:3001`],
@@ -15,11 +15,19 @@ import { GatewayMessageData } from 'src/utils/types';
 })
 export class Gateway {
   constructor(private readonly socketMap: SocketsMap) {}
+
   @WebSocketServer()
-  server: Server;
+  public server: Server;
+
+  // afterInit(server: Server) {
+  //   this.messageService.events$.asObservable().subscribe({
+  //     next: (event) => {
+  //       server.emit('message:create', event.data);
+  //     },
+  //   });
+  // }
 
   handleConnection(@ConnectedSocket() client) {
-    console.log('connected!');
     this.socketMap.setUserSocket(
       client.request.session.passport.user._id,
       client,
@@ -27,20 +35,25 @@ export class Gateway {
   }
 
   handleDisconnect(@ConnectedSocket() client) {
-    console.log('disconnected');
     this.socketMap.removeUserSocket(client.request.session.passport.user._id);
   }
 
-  @OnEvent('onMessageCreate')
-  handleMessage(body: GatewayMessageData) {
-    const recipent =
-      body.message.author._id.toString() ===
-      body.conversation.creator._id.toString()
-        ? body.conversation.recipent
-        : body.conversation.creator;
-    const id = recipent._id.toString();
-    const recipentSocket = this.socketMap.getUserSocket(id);
-    console.log(recipentSocket);
-    recipentSocket.emit('onMessage', body.message.content);
+  @OnEvent('event:messageCreate')
+  handleMessageCreate(body: MessageData) {
+    console.log('Handling', body);
+    const {
+      message: { author },
+      conversation: { creator, recipent },
+    } = body;
+
+    const recipentSocket =
+      author._id.toString() === creator._id.toString()
+        ? this.socketMap.getUserSocket(recipent._id.toString())
+        : this.socketMap.getUserSocket(creator._id.toString());
+
+    const authorSocket = this.socketMap.getUserSocket(author._id.toString());
+
+    if (authorSocket) authorSocket.emit('onMessage', body.message);
+    if (recipentSocket) recipentSocket.emit('onMessage', body.message);
   }
 }
