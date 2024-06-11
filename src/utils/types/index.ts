@@ -46,7 +46,7 @@ export type AuthenticatedUser = {
 export type MessageData = {
   conversation: {
     creator: User | Account;
-    recipent: User | Account;
+    recipient: User | Account;
   };
 
   message: Message;

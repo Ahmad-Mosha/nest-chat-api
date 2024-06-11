@@ -43,12 +43,12 @@ export class Gateway {
     console.log('Handling', body);
     const {
       message: { author },
-      conversation: { creator, recipent },
+      conversation: { creator, recipient },
     } = body;
 
     const recipentSocket =
       author._id.toString() === creator._id.toString()
-        ? this.socketMap.getUserSocket(recipent._id.toString())
+        ? this.socketMap.getUserSocket(recipient._id.toString())
         : this.socketMap.getUserSocket(creator._id.toString());
 
     const authorSocket = this.socketMap.getUserSocket(author._id.toString());

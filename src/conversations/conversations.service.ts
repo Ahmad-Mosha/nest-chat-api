@@ -28,8 +28,8 @@ export class ConversationsService {
     return await this.conversationRepo.find();
   }
   async createConversation(request: ConversationRequestData) {
-    const recipent = await this.userService.getUserByEmail(request.recipient);
-    if (recipent.email === request.user.email)
+    const recipient = await this.userService.getUserByEmail(request.recipient);
+    if (recipient.email === request.user.email)
       throw new HttpException(
         "You can't create a conversation with yourself",
         HttpStatus.BAD_REQUEST,
@@ -37,7 +37,7 @@ export class ConversationsService {
 
     const existedConversation = await doesExist(
       request.user,
-      recipent,
+      recipient,
       this.conversationRepo,
     );
     if (existedConversation)
@@ -47,7 +47,7 @@ export class ConversationsService {
       );
     const conversation = this.conversationRepo.create({
       creator: request.user,
-      recipent: recipent,
+      recipient: recipient,
     });
     return await this.conversationRepo.save(conversation);
   }
@@ -55,7 +55,7 @@ export class ConversationsService {
   async getConversations(authUser: User | Account) {
     const conversations = await this.conversationRepo.find({
       where: {
-        $or: [{ creator: authUser }, { recipent: authUser }],
+        $or: [{ creator: authUser }, { recipient: authUser }],
       },
     });
     if (conversations.length === 0) {

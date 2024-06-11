@@ -26,7 +26,7 @@ export class MessagesService {
 
     if (
       msg.author._id.toString() !== conversation.creator._id.toString() &&
-      msg.author._id.toString() !== conversation.recipent._id.toString()
+      msg.author._id.toString() !== conversation.recipient._id.toString()
     ) {
       throw new UnauthorizedException(
         'Only the creator or recipient can send messages',
@@ -42,7 +42,7 @@ export class MessagesService {
     const messageData = {
       conversation: {
         creator: conversation.creator,
-        recipent: conversation.recipent,
+        recipient: conversation.recipient,
       },
       message: newMessage,
     };
