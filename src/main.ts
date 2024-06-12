@@ -7,28 +7,34 @@ import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import sessionConfig from './sessions/session.config';
 import { ExceptionLogger } from './exceptionFilters/logger.filter';
+import { AuthenticatedSocketIoAdapter } from './gateway/gateway.adaptar';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
   app.enableCors({
     origin: [`${process.env.NEXT_API_URL}`],
     credentials: true,
   });
-  app.use(
-    session({
-      name: 'chat-app',
-      secret: process.env.SESSION_SECRET_NAME,
-      resave: false,
-      saveUninitialized: false,
-      cookie: {
-        maxAge: parseInt(process.env.SESSION_MAX_AGE),
-      },
-      store: MongoStore.create(sessionConfig),
-    }),
-  );
 
+  const sessions = session({
+    name: 'chat-app',
+    secret: process.env.SESSION_SECRET_NAME,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: parseInt(process.env.SESSION_MAX_AGE),
+    },
+    store: MongoStore.create(sessionConfig),
+  });
+  const authenticatedSocketAdaptar = new AuthenticatedSocketIoAdapter(
+    sessions,
+    app,
+  );
+  app.use(sessions);
   app.use(passport.initialize());
   app.use(passport.session());
+  app.useWebSocketAdapter(authenticatedSocketAdaptar);
 
   const customOptions = {
     customSiteTitle: 'My Custom Chat API Docs',

@@ -14,7 +14,7 @@ export class Conversation {
   creator: User | Account;
 
   @Column()
-  recipent: User | Account;
+  recipient: User | Account;
 
   @Column({ array: true })
   messages: Message[];

@@ -15,9 +15,12 @@ import {
   Message,
   Conversation,
 } from './typeorm/index';
+import { GatewayModule } from './gateway/gateway.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    EventEmitterModule.forRoot(),
     TypeOrmModule.forRoot({
       name: 'MongoDB',
       type: 'mongodb',
@@ -33,9 +36,9 @@ import {
     ConversationsModule,
     AccountsModule,
     ChatInvitaionsModule,
+    GatewayModule,
   ],
   controllers: [],
-  providers: [],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

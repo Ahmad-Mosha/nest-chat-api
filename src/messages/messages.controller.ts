@@ -3,7 +3,6 @@ import {
   Controller,
   Get,
   Post,
-  Req,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -13,16 +12,28 @@ import { MessagesService } from './messages.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { Account } from 'src/typeorm/entities/account.entity';
 import { User } from 'src/typeorm/entities/user.entity';
+import { AuthUser } from 'src/decorators/auth.decorator';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @UseInterceptors(LoggerInterceptor)
 @UseGuards(AuthenticatedGuard)
 @Controller('messages')
 export class MessagesController {
-  constructor(private readonly messageService: MessagesService) {}
+  constructor(
+    private readonly messageService: MessagesService,
+    private readonly event: EventEmitter2,
+  ) {}
+
   @Post('create')
-  async createMessage(@Req() req, @Body() messageBody: CreateMessageDto) {
-    const author: Account | User = req.user;
-    return this.messageService.createMessage({ ...messageBody, author });
+  async createMessage(
+    @AuthUser() author: User | Account,
+    @Body() messageBody: CreateMessageDto,
+  ) {
+    const message = await this.messageService.createMessage({
+      ...messageBody,
+      author,
+    });
+    this.event.emit('event:messageCreate', message);
   }
   @Get()
   async getAllMessages() {
