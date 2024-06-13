@@ -16,11 +16,9 @@ import {
   Conversation,
 } from './typeorm/index';
 import { GatewayModule } from './gateway/gateway.module';
-import { EventEmitterModule } from '@nestjs/event-emitter';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    EventEmitterModule.forRoot(),
     TypeOrmModule.forRoot({
       name: 'MongoDB',
       type: 'mongodb',

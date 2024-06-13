@@ -1,12 +1,13 @@
 import {
   ConnectedSocket,
+  MessageBody,
+  SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
 import { SocketsMap } from './sockets.map';
-import { MessageData } from 'src/utils/types';
-import { OnEvent } from '@nestjs/event-emitter';
+import { MessageCreatePayload } from 'src/utils/types';
 @WebSocketGateway({
   cors: {
     origin: [`http://localhost:3001`],
@@ -19,14 +20,6 @@ export class Gateway {
   @WebSocketServer()
   public server: Server;
 
-  // afterInit(server: Server) {
-  //   this.messageService.events$.asObservable().subscribe({
-  //     next: (event) => {
-  //       server.emit('message:create', event.data);
-  //     },
-  //   });
-  // }
-
   handleConnection(@ConnectedSocket() client) {
     this.socketMap.setUserSocket(
       client.request.session.passport.user._id,
@@ -38,9 +31,8 @@ export class Gateway {
     this.socketMap.removeUserSocket(client.request.session.passport.user._id);
   }
 
-  @OnEvent('event:messageCreate')
-  handleMessageCreate(body: MessageData) {
-    console.log('Handling', body);
+  @SubscribeMessage('event:messageCreate')
+  handleMessageCreate(@MessageBody() body: MessageCreatePayload) {
     const {
       message: { author },
       conversation: { creator, recipient },
@@ -51,9 +43,6 @@ export class Gateway {
         ? this.socketMap.getUserSocket(recipient._id.toString())
         : this.socketMap.getUserSocket(creator._id.toString());
 
-    const authorSocket = this.socketMap.getUserSocket(author._id.toString());
-
-    if (authorSocket) authorSocket.emit('onMessage', body.message);
-    if (recipentSocket) recipentSocket.emit('onMessage', body.message);
+    if (recipentSocket) recipentSocket.emit('onMessage', body);
   }
 }

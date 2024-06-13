@@ -13,16 +13,12 @@ import { CreateMessageDto } from './dto/create-message.dto';
 import { Account } from 'src/typeorm/entities/account.entity';
 import { User } from 'src/typeorm/entities/user.entity';
 import { AuthUser } from 'src/decorators/auth.decorator';
-import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @UseInterceptors(LoggerInterceptor)
 @UseGuards(AuthenticatedGuard)
 @Controller('messages')
 export class MessagesController {
-  constructor(
-    private readonly messageService: MessagesService,
-    private readonly event: EventEmitter2,
-  ) {}
+  constructor(private readonly messageService: MessagesService) {}
 
   @Post('create')
   async createMessage(
@@ -33,7 +29,7 @@ export class MessagesController {
       ...messageBody,
       author,
     });
-    this.event.emit('event:messageCreate', message);
+    return message;
   }
   @Get()
   async getAllMessages() {
