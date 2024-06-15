@@ -50,8 +50,8 @@ export class AuthController {
   })
   @Post('login')
   login(@Body() payload: LoginDto, @Req() req) {
-    const { email, name } = req.user;
-    return { email, name };
+    const { email, name, image } = req.user;
+    return { email, name, image };
   }
 
   @UseGuards(GoogleAuthGuard)

@@ -1,5 +1,4 @@
-import { ObjectId } from 'typeorm';
-import { User, Account } from 'src/typeorm';
+import { User, Account, Message } from 'src/typeorm';
 
 export type AccountCredentials = {
   name: string;
@@ -18,7 +17,7 @@ export type UserCredentials = {
 
 export type MessageRequestData = {
   content: string;
-  conversationId: ObjectId;
+  conversationId: string;
   author: User | Account;
 };
 
@@ -42,4 +41,14 @@ export type AuthenticatedUser = {
   name: string;
   email: string;
   image?: string;
+};
+
+export type MessageCreatePayload = {
+  conversation: {
+    _id: string;
+    creator: User | Account;
+    recipient: User | Account;
+  };
+
+  message: Message;
 };

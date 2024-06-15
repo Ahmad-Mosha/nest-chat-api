@@ -13,6 +13,8 @@ export class MessagesService {
     private readonly conversationService: ConversationsService,
   ) {}
 
+  // public events$ = new Subject<{ data: MessageData }>();
+
   async getMessages() {
     return await this.messagesRepo.find();
   }
@@ -24,7 +26,7 @@ export class MessagesService {
 
     if (
       msg.author._id.toString() !== conversation.creator._id.toString() &&
-      msg.author._id.toString() !== conversation.recipent._id.toString()
+      msg.author._id.toString() !== conversation.recipient._id.toString()
     ) {
       throw new UnauthorizedException(
         'Only the creator or recipient can send messages',
@@ -37,5 +39,15 @@ export class MessagesService {
       conversation,
       newMessage,
     );
+    const messageData = {
+      conversation: {
+        _id: conversation._id.toString(),
+        creator: conversation.creator,
+        recipient: conversation.recipient,
+      },
+      message: newMessage,
+    };
+    // this.events$.next({ data: messageData });
+    return messageData;
   }
 }
