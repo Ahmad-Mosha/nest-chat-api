@@ -11,7 +11,6 @@ import { Conversation } from 'src/typeorm/entities/conversation.entity';
 import { Message } from 'src/typeorm/entities/message.entity';
 import { User } from 'src/typeorm/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
-import { doesExist } from 'src/utils/conversations/doesExist';
 import { filterObject } from 'src/utils/functions/deleteObjectKey';
 import { ConversationRequestData } from 'src/utils/types';
 import { MongoRepository } from 'typeorm';
@@ -35,16 +34,6 @@ export class ConversationsService {
         HttpStatus.BAD_REQUEST,
       );
 
-    const existedConversation = await doesExist(
-      request.user,
-      recipient,
-      this.conversationRepo,
-    );
-    if (existedConversation)
-      throw new HttpException(
-        'Conversation already exists',
-        HttpStatus.BAD_REQUEST,
-      );
     const conversation = this.conversationRepo.create({
       creator: request.user,
       recipient: recipient,

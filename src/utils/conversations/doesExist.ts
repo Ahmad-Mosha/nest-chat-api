@@ -4,14 +4,14 @@ import { MongoRepository } from 'typeorm';
 import { Conversation } from 'src/typeorm/entities/conversation.entity';
 export async function doesExist(
   authUser: User | Account,
-  rec: any,
+  recipient: User | Account,
   conversationRepo: MongoRepository<Conversation>,
 ) {
   const conversation = await conversationRepo.findOne({
     where: {
       $or: [
-        { creator: authUser, recipent: rec },
-        { creator: rec, recipent: authUser },
+        { creator: authUser, recipient },
+        { creator: recipient, recipient: authUser },
       ],
     },
   });
