@@ -43,8 +43,9 @@ export type AuthenticatedUser = {
   image?: string;
 };
 
-export type MessageData = {
+export type MessageCreatePayload = {
   conversation: {
+    _id: string;
     creator: User | Account;
     recipient: User | Account;
   };

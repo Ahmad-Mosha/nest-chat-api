@@ -1,17 +1,25 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { InvitationData } from 'src/utils/types';
 import { UsersService } from 'src/users/users.service';
 import { isPending } from 'src/utils/chat-invitations/isPending';
-import { Account, User, ChatInvitation } from 'src/typeorm';
+import { Account, User, ChatInvitation, Conversation } from 'src/typeorm';
 import { ObjectId } from 'mongodb';
+import { doesExist } from 'src/utils/conversations/doesExist';
 
 @Injectable()
 export class ChatInviationService {
   constructor(
     @InjectRepository(ChatInvitation, 'MongoDB')
     private readonly chatInvitationRepo: MongoRepository<ChatInvitation>,
+    @InjectRepository(Conversation, 'MongoDB')
+    private readonly conversationRepo: MongoRepository<Conversation>,
     private readonly usersService: UsersService,
   ) {}
 
@@ -24,6 +32,16 @@ export class ChatInviationService {
     }
 
     await isPending(invitaionData.sender, receiver, this.chatInvitationRepo);
+    const existedConversation = await doesExist(
+      invitaionData.sender,
+      receiver,
+      this.conversationRepo,
+    );
+    if (existedConversation)
+      throw new HttpException(
+        'You already have a conversation with that user.',
+        HttpStatus.BAD_REQUEST,
+      );
 
     const requestedInvitation = this.chatInvitationRepo.create({
       ...invitaionData,

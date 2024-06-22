@@ -4,9 +4,13 @@ import { ChatInvitationController } from './chat-invitations.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ChatInvitation } from 'src/typeorm/entities/chat-invitation';
 import { UsersModule } from 'src/users/users.module';
+import { Conversation } from 'src/typeorm';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ChatInvitation], 'MongoDB'), UsersModule],
+  imports: [
+    TypeOrmModule.forFeature([ChatInvitation, Conversation], 'MongoDB'),
+    UsersModule,
+  ],
   providers: [ChatInviationService],
   controllers: [ChatInvitationController],
 })

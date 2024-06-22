@@ -4,6 +4,7 @@ import {
   Get,
   Post,
   Req,
+  Res,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -73,9 +74,11 @@ export class AuthController {
   }
 
   @Get('logout')
-  logout(@Req() req) {
-    req.session.destroy();
-    return 'Logged out';
+  logout(@Req() req, @Res() res) {
+    req.session.destroy(function () {
+      res.clearCookie('chat-app');
+      res.send('Ok');
+    });
   }
 
   @UseGuards(TwitterAuthGuard)

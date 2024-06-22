@@ -26,7 +26,7 @@ export class AccountsService {
   async getAccount(email: string) {
     const account = await this.accountRepo.findOne({ where: { email } });
     if (!account) {
-      throw new NotFoundException('No email was found');
+      throw new NotFoundException('No user were found with that email.');
     }
     return account;
   }
