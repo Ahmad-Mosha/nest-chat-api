@@ -19,7 +19,7 @@ export class ConversationsInterceptor implements NestInterceptor {
     return next.handle().pipe(
       map((conversations) => {
         return conversations.map((conversation) => {
-          const { _id, messages, created_at } = conversation;
+          const { _id, messages, created_at, lastMessageSent } = conversation;
           if (conversation.creator.email === user.email) {
             return {
               _id,
@@ -30,6 +30,7 @@ export class ConversationsInterceptor implements NestInterceptor {
               },
               messages,
               created_at,
+              lastMessageSent,
             };
           }
           if (conversation.recipient.email === user.email) {
@@ -42,6 +43,7 @@ export class ConversationsInterceptor implements NestInterceptor {
               },
               messages,
               created_at,
+              lastMessageSent,
             };
           }
         });

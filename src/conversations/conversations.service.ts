@@ -26,6 +26,7 @@ export class ConversationsService {
   async getAllConversations() {
     return await this.conversationRepo.find();
   }
+
   async createConversation(request: ConversationRequestData) {
     const recipient = await this.userService.getUserByEmail(request.recipient);
     if (recipient.email === request.user.email)
@@ -81,9 +82,16 @@ export class ConversationsService {
       );
     }
 
-    return await this.conversationRepo.updateOne(
+    await this.conversationRepo.updateOne(
       { _id: conversation._id },
       { $push: { messages: message } as any },
+    );
+
+    await this.conversationRepo.updateOne(
+      {
+        _id: conversation._id,
+      },
+      { $set: { lastMessageSent: message } },
     );
   }
 }

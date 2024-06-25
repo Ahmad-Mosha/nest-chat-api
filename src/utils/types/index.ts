@@ -48,6 +48,7 @@ export type MessageCreatePayload = {
     _id: string;
     creator: User | Account;
     recipient: User | Account;
+    lastMessageSent: Message;
   };
 
   message: Message;
