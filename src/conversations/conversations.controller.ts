@@ -43,12 +43,14 @@ export class ConversationsController {
     });
     return conversation;
   }
+
   @Get()
   @UseInterceptors(ConversationsInterceptor)
   async getAuthUserConversations(@AuthUser() user: User | Account) {
     const authUser = await this.userService.getUserByEmail(user.email);
     return await this.conversationService.getConversations(authUser);
   }
+
   @Get(':id')
   async getConversation(@Param('id', ValidateMongoIdPipe) id: string) {
     return await this.conversationService.getConversationById(id);
