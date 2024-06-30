@@ -42,7 +42,7 @@ export class ConversationsService {
     return await this.conversationRepo.save(conversation);
   }
 
-  async getConversations(authUser: User | Account) {
+  async getAuthConversations(authUser: User | Account) {
     const conversations = await this.conversationRepo.find({
       where: {
         $or: [{ creator: authUser }, { recipient: authUser }],

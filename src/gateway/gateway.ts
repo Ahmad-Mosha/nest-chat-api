@@ -38,11 +38,13 @@ export class Gateway {
       conversation: { creator, recipient },
     } = body;
 
+    const authorSocket = this.socketMap.getUserSocket(author._id.toString());
     const recipentSocket =
       author._id.toString() === creator._id.toString()
         ? this.socketMap.getUserSocket(recipient._id.toString())
         : this.socketMap.getUserSocket(creator._id.toString());
 
+    if (authorSocket) authorSocket.emit('onMessage', body);
     if (recipentSocket) recipentSocket.emit('onMessage', body);
   }
 }
