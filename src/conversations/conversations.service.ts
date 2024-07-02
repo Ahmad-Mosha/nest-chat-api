@@ -11,7 +11,6 @@ import { Conversation } from 'src/typeorm/entities/conversation.entity';
 import { Message } from 'src/typeorm/entities/message.entity';
 import { User } from 'src/typeorm/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
-import { doesExist } from 'src/utils/conversations/doesExist';
 import { filterObject } from 'src/utils/functions/deleteObjectKey';
 import { ConversationRequestData } from 'src/utils/types';
 import { MongoRepository } from 'typeorm';
@@ -27,6 +26,7 @@ export class ConversationsService {
   async getAllConversations() {
     return await this.conversationRepo.find();
   }
+
   async createConversation(request: ConversationRequestData) {
     const recipient = await this.userService.getUserByEmail(request.recipient);
     if (recipient.email === request.user.email)
@@ -35,16 +35,6 @@ export class ConversationsService {
         HttpStatus.BAD_REQUEST,
       );
 
-    const existedConversation = await doesExist(
-      request.user,
-      recipient,
-      this.conversationRepo,
-    );
-    if (existedConversation)
-      throw new HttpException(
-        'Conversation already exists',
-        HttpStatus.BAD_REQUEST,
-      );
     const conversation = this.conversationRepo.create({
       creator: request.user,
       recipient: recipient,
@@ -52,7 +42,7 @@ export class ConversationsService {
     return await this.conversationRepo.save(conversation);
   }
 
-  async getConversations(authUser: User | Account) {
+  async getAuthConversations(authUser: User | Account) {
     const conversations = await this.conversationRepo.find({
       where: {
         $or: [{ creator: authUser }, { recipient: authUser }],
@@ -92,9 +82,16 @@ export class ConversationsService {
       );
     }
 
-    return await this.conversationRepo.updateOne(
+    await this.conversationRepo.updateOne(
       { _id: conversation._id },
       { $push: { messages: message } as any },
+    );
+
+    await this.conversationRepo.updateOne(
+      {
+        _id: conversation._id,
+      },
+      { $set: { lastMessageSent: message } },
     );
   }
 }

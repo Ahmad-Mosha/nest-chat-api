@@ -19,6 +19,9 @@ export class Conversation {
   @Column({ array: true })
   messages: Message[];
 
+  @Column()
+  lastMessageSent: Message;
+
   @CreateDateColumn({ type: 'timestamptz' })
   created_at: Date;
 }

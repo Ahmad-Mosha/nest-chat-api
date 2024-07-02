@@ -14,7 +14,6 @@ import { ConversationsService } from './conversations.service';
 import { AuthenticatedGuard } from 'src/guards/auth.guard';
 import { LoggerInterceptor } from 'src/interceptors/logger.interceptor';
 import { AuthUser } from 'src/decorators/auth.decorator';
-import { ConversationsInterceptor } from 'src/interceptors/conversations.interceptor';
 import { UsersService } from 'src/users/users.service';
 import { ValidateMongoIdPipe } from 'src/pipes/validate-mongoid.pipe';
 
@@ -43,12 +42,13 @@ export class ConversationsController {
     });
     return conversation;
   }
+
   @Get()
-  @UseInterceptors(ConversationsInterceptor)
-  async getAuthUserConversations(@AuthUser() user: User | Account) {
-    const authUser = await this.userService.getUserByEmail(user.email);
-    return await this.conversationService.getConversations(authUser);
+  async getAuthUserConversations(@AuthUser() { email }: User | Account) {
+    const authUser = await this.userService.getUserByEmail(email);
+    return await this.conversationService.getAuthConversations(authUser);
   }
+
   @Get(':id')
   async getConversation(@Param('id', ValidateMongoIdPipe) id: string) {
     return await this.conversationService.getConversationById(id);

@@ -39,10 +39,14 @@ export class MessagesService {
       conversation,
       newMessage,
     );
+
     const messageData = {
       conversation: {
+        _id: conversation._id.toString(),
         creator: conversation.creator,
         recipient: conversation.recipient,
+        messages: conversation.messages,
+        lastMessageSent: newMessage,
       },
       message: newMessage,
     };
